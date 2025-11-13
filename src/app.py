@@ -18,7 +18,22 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 # Configurar CORS de manera más permisiva para desarrollo
-CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
+#CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"], supports_credentials=True)
+# Configurar CORS para producción
+origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000", 
+    "https://tu-frontend.netlify.app",  # Tu futuro frontend
+    "https://*.netlify.app"             # Cualquier subdominio Netlify
+]
+
+CORS(app, resources={
+    r"/api/*": {
+        "origins": origins,
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 # Configuración Supabase
 try:
